@@ -29,7 +29,7 @@ std::shared_ptr<state> basicModel::predict(std::shared_ptr<state> sv, int64_t t)
          dt_3/2*noise_ax,   0,                dt_2*noise_ax,    0,
          0,                 dt_3/2*noise_ay,  0,                dt_2*noise_ay;
 
-    std::shared_ptr<state> result = stateFactory::create<pv2D>();
+    std::shared_ptr<state> result = sv->create();
     result->time() = t;
     result->mean() = F * sv->mean();
     result->cov()  = F * sv->cov() * F.transpose() + Q;

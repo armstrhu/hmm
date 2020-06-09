@@ -21,20 +21,9 @@ public:
 
     virtual Eigen::MatrixXd jacobian(std::shared_ptr<measurement> obs,  void* user = nullptr);
     virtual data simulate(std::shared_ptr<measurement> obs,  void* user = nullptr);
+
+    virtual std::unique_ptr<state> create() = 0;
+    virtual std::unique_ptr<state> copy() = 0;
 };
-
-class stateFactory {
-public:
-    stateFactory() = default;
-    ~stateFactory() = default;
-
-    template<typename T>
-    static std::unique_ptr<state> create();
-};
-
-template<typename T>
-std::unique_ptr<state> stateFactory::create() {
-    return std::unique_ptr<state>(new T);
-}
 
 } /* namespace hmm */

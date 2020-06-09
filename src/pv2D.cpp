@@ -12,4 +12,12 @@ data pv2D::simulate(std::shared_ptr<measurement> obs,  void* user) {
     return obs->simulate(this, user);
 }
 
+std::unique_ptr<state> pv2D::create() {
+    return std::unique_ptr<state>(new pv2D);
+}
+
+std::unique_ptr<state> pv2D::copy() {
+    return std::unique_ptr<state>(new pv2D(*this));
+}
+
 } /* namespace hmm */

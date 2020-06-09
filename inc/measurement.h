@@ -12,11 +12,8 @@ class state;
 class pv2D;
 
 class measurement : public data {
-protected:
-    friend class measurementFactory;
-    measurement(int d);
-
 public:
+    measurement(int d);
     virtual ~measurement() = default;
 
     Eigen::MatrixXd jacobian(state* sv, void* user = nullptr) const;
@@ -24,20 +21,9 @@ public:
 
     virtual Eigen::MatrixXd jacobian(pv2D* sv, void* user = nullptr) const ;
     virtual data simulate(pv2D* sv,  void* user = nullptr);
+
+    virtual std::unique_ptr<measurement> create() = 0;
+    virtual std::unique_ptr<measurement> copy() = 0;
 };
-
-class measurementFactory {
-public:
-    measurementFactory() = default;
-    ~measurementFactory() = default;
-
-    template<typename T>
-    static std::unique_ptr<measurement> create();
-};
-
-template<typename T>
-std::unique_ptr<measurement> measurementFactory::create() {
-    return std::unique_ptr<measurement>(new T);
-}
 
 } /* namespace hmm */

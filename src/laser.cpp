@@ -24,4 +24,12 @@ data laser::simulate(pv2D* sv, void* user) {
     return obs;
 }
 
+std::unique_ptr<measurement> laser::create() {
+    return std::unique_ptr<measurement>(new laser);
+}
+
+std::unique_ptr<measurement> laser::copy() {
+    return std::unique_ptr<measurement>(new laser(*this));
+}
+
 } /* namespace filter */

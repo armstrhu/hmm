@@ -13,15 +13,15 @@ class observation;
 class measurement;
 
 class pv2D : public state {
-protected:
-    friend class stateFactory;
-    pv2D();
-
 public:
+    pv2D();
     virtual ~pv2D() = default;
 
     Eigen::MatrixXd jacobian(std::shared_ptr<measurement> obs,  void* user)  override;
     data simulate(std::shared_ptr<measurement> obs,  void* user)  override;
+
+    virtual std::unique_ptr<state> create() override;
+    virtual std::unique_ptr<state> copy() override;
 };
 
 } /* namespace hmm */

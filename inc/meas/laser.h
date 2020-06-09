@@ -6,15 +6,15 @@
 namespace hmm {
 
 class laser : public measurement {
-protected:
-    friend class measurementFactory;
-    laser();
-
 public:
+    laser();
     virtual ~laser() = default;
 
     Eigen::MatrixXd jacobian(pv2D* sv, void* user = nullptr) const override;
     data simulate(pv2D* sv, void* user = nullptr) override;
+
+    virtual std::unique_ptr<measurement> create() override;
+    virtual std::unique_ptr<measurement> copy() override;
 };
 
 } /* namespace filter */

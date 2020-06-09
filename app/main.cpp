@@ -25,7 +25,7 @@ void parseData(const std::string& in,
         iss >> sensor_type;
         if (sensor_type.compare("L") == 0) {
           // LASER MEASUREMENT
-          std::unique_ptr<hmm::measurement> meas = hmm::measurementFactory::create<hmm::laser>();
+          std::unique_ptr<hmm::measurement> meas(new hmm::laser);
 
           // read measurements at this timestamp
           double x;
@@ -44,7 +44,7 @@ void parseData(const std::string& in,
           allMeas.push_back(std::move(meas));
         } else if (sensor_type.compare("R") == 0) {
           // RADAR MEASUREMENT
-          std::unique_ptr<hmm::measurement> meas = hmm::measurementFactory::create<hmm::radar>();
+          std::unique_ptr<hmm::measurement> meas(new hmm::radar);
 
           // read measurements at this timestamp
           double ro;
@@ -87,7 +87,7 @@ int main(int argc, char* argv[]) {
   std::vector<Eigen::VectorXd> truth;
   parseData(argv[1], allMeas, truth);
 
-  std::shared_ptr<hmm::state> s0 = std::move(hmm::stateFactory::create<hmm::pv2D>());
+  std::shared_ptr<hmm::state> s0(new hmm::pv2D);
   s0->time() = allMeas[0]->time();
   s0->mean() = 5.0 * Eigen::VectorXd::Ones(s0->dim());
   s0->cov() << 10, 0, 0, 0,

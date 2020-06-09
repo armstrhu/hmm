@@ -63,4 +63,13 @@ data radar::simulate(pv2D* sv, void* user) {
     return obs;
 }
 
+std::unique_ptr<measurement> radar::create() {
+    return std::unique_ptr<measurement>(new radar);
+}
+
+std::unique_ptr<measurement> radar::copy() {
+    return std::unique_ptr<measurement>(new radar(*this));
+}
+
+
 } /* namespace filter */
