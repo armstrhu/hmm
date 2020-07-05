@@ -2,12 +2,8 @@
 
 namespace hmm {
 
-data::data(int d) : id_(boost::uuids::random_generator()()), dim_(d) {
+data::data(int d) : dim_(d) {
     reset(d);
-}
-
-bool data::operator==(const data& rhs) {
-    return this->id_ == rhs.id_;
 }
 
 bool data::operator<(const data& rhs) {

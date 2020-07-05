@@ -8,6 +8,7 @@
 #include "meas/radar.h"
 #include "model/basicModel.h"
 #include "filter/ekf.h"
+#include "filter/pf.h"
 
 void parseData(const std::string& in,
                std::vector<std::shared_ptr<hmm::measurement>>& allMeas,
@@ -84,8 +85,9 @@ void parseData(const std::string& in,
 
 int main(int argc, char* argv[]) {
   std::vector<std::shared_ptr<hmm::measurement>> allMeas;
+
   std::vector<Eigen::VectorXd> truth;
-  parseData(argv[1], allMeas, truth);
+  parseData(argv[2], allMeas, truth);
 
   std::shared_ptr<hmm::state> s0(new hmm::pv2D);
   s0->time() = allMeas[0]->time();
@@ -95,15 +97,23 @@ int main(int argc, char* argv[]) {
                0, 0, 1000, 0,
                0, 0, 0, 1000;
 
-  hmm::ekf filter(s0);
+  std::shared_ptr<hmm::filter> filter;
+  if(strcmp(argv[1], "-kf") == 0) {
+      filter.reset(new hmm::ekf(s0));
+  } else if (strcmp(argv[1], "-pf") == 0) {
+      filter.reset(new hmm::pf(s0));
+  } else {
+      throw 888;
+  }
+
   for(auto itr = allMeas.begin(); itr != allMeas.end(); ++itr) {
-      filter.addTimestep((*itr)->time());
-      filter.push(*itr);
+      filter->addTimestep((*itr)->time());
+      filter->push(*itr);
   }
 
   std::shared_ptr<hmm::model> m(new hmm::basicModel);
-  filter.setModel(m);
-  std::vector<std::shared_ptr<hmm::state>> estimates = filter.run();
+  filter->setModel(m);
+  std::vector<std::shared_ptr<hmm::state>> estimates = filter->run();
 
   double rms = 0.0;
   for(size_t i = 0; i < truth.size(); ++i) {

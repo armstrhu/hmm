@@ -14,7 +14,6 @@ public:
     data() = delete;
     data(int d);
 
-    bool operator==(const data& rhs);
     bool operator<(const data& rhs);
 
     void reset(int d);
@@ -35,7 +34,6 @@ public:
     const double& cov(int i, int j) const;
 
 private:
-    const boost::uuids::uuid id_;
     const int dim_;
 
     int64_t time_;

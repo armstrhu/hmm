@@ -9,6 +9,8 @@
 namespace hmm {
 
 class filter {
+protected:
+    filter() = default;
 public:
     filter(std::shared_ptr<state> init);
 
