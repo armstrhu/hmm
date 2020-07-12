@@ -83,12 +83,22 @@ void parseData(const std::string& in,
       }
 }
 
+std::string help(const std::string& app) {
+    return "usage: " + app + " <-kf/-pf> <input data file>";
+}
+
 int main(int argc, char* argv[]) {
+  if(argc != 3) {
+      std::cout << help(argv[0]) << std::endl;
+      exit(0);
+  }
+
   std::vector<std::shared_ptr<hmm::measurement>> allMeas;
 
   std::vector<Eigen::VectorXd> truth;
   parseData(argv[2], allMeas, truth);
 
+  // harded coded initial seed for this sample data...
   std::shared_ptr<hmm::state> s0(new hmm::pv2D);
   s0->time() = allMeas[0]->time();
   s0->mean() = 5.0 * Eigen::VectorXd::Ones(s0->dim());
@@ -103,7 +113,8 @@ int main(int argc, char* argv[]) {
   } else if (strcmp(argv[1], "-pf") == 0) {
       filter.reset(new hmm::pf(s0));
   } else {
-      throw 888;
+      std::cout << help(argv[0]) << std::endl;
+      exit(0);
   }
 
   for(auto itr = allMeas.begin(); itr != allMeas.end(); ++itr) {

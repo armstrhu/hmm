@@ -14,7 +14,7 @@ pf::pf(std::shared_ptr<state> init) : filter(init), rng_(time(0)),
     particle par;
     par.state_ = current_;
 
-    int N = 1E4;
+    int N = 1E3;
     particles_.reserve(N);
     for(int n = 0; n < N; ++n) {
         particles_.push_back(par.clone());
