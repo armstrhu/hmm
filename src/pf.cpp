@@ -92,16 +92,16 @@ void pf::resample() {
     size_t N = particles_.size();
     std::vector<particle> particles;
     particles.reserve(N);
+    double w0 = 1.0/N;
     for(size_t n = 0; n < N; ++n) {
         double x = uniform_dist_(rng_);
         auto itr = cdf.lower_bound(x);
         particle par = itr->second.clone();
         par.regularize(A, GaussianGenerator); // regularize with process noise from model
+        par.weight() = w0;
         particles.push_back(std::move(par));
     }
     std::swap(particles_, particles);
-
-    renormalize();
 }
 
 void pf::updateCurrentEstimate() {
